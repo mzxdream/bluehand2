@@ -1,0 +1,67 @@
+#ifndef _BHPTRDBLBUF_HPP_
+#define _BHPTRDBLBUF_HPP_
+
+template <typename T>
+class BhPtrDblBuf
+{
+public:
+    BhPtrDblBuf()
+	:m_pPopList(&m_bufList1)
+	,m_pPushList(&m_bufList2)
+    {}
+    ~BhPtrDblBuf()
+    {
+	Clear();
+    }
+public:
+    bool Pop(T *&pBuf)
+    {
+	if (m_pPopList->empty())
+	{
+	    pBuf = NULL;
+	    return false;
+	}
+	pBuf = m_pPopList->front();
+	m_pPopList->pop_front();
+	return true;
+    }
+    void Push(T *pBuf)
+    {
+	m_pPushList->push_back(pBuf);
+    }
+    size_t GetPushSize() const
+    {
+	return m_pPushList->size();
+    }
+    size_t GetPopSize() const
+    {
+        return m_pPopList->size();
+    }
+    void Exchange()
+    {
+	m_pPopList ^= m_pPushList;
+	m_pPushList ^= m_pPopList;
+	m_pPopList ^= m_pPushList;
+    }
+    void Clear()
+    {
+	std::list<T *>::iterator iter;
+	for (iter = m_bufList1.begin(); iter != m_bufList1.end();)
+	{
+	    delete *iter;
+	    iter = m_bufList1.erase(iter);
+	}
+	for (iter = m_bufList2.begin(); iter != m_bufList2.end();)
+	{
+	    delete *iter;
+	    iter = m_bufList2.erase(iter);
+	}
+    }
+protected:
+    std::list<T *> m_bufList1;
+    std::list<T *> m_bufList2;
+    std::list<T *> *m_pPopList;
+    std::list<T *> *m_pPushList;
+};
+
+#endif

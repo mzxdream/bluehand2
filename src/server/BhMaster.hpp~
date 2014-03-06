@@ -1,0 +1,21 @@
+#ifndef _BHMASTER_HPP_
+#define _BHMASTER_HPP_
+
+#include <map>
+#include "MxThread.hpp"
+
+class BhMaster
+    :public MxThread
+{
+public:
+    BhMaster();
+    virtual ~BhMaster();
+public:
+    bool Init();
+    virtual void Run();
+    void Clear();
+protected:
+    std::map<int, IModule *> m_moduleMap;
+};
+
+#endif

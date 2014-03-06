@@ -1,0 +1,31 @@
+BhMaster::BhMaster()
+{
+}
+BhMaster::~BhMaster()
+{
+}
+void BhMaster::Run()
+{
+    std::map<int, IModule *>::iterator itModule;
+    std::map<int, IModule *>::iterator itRecvModule;
+    std::list<IMsg *>::iterator itMsg;
+    IMsg *pMsg = NULL;
+    while (WantRun())
+    {
+        for (itMoudle = m_moduleMap.begin(); itModule != m_moduleMap.end() && WantToRun(); ++itModule)
+        {
+            while ((pMsg = itModule->second.GetMessage()) && WantRun())
+            {
+                itRecvModule = m_moduleMap.find(itMsg->GetRecvModule());
+		if (itRecvModule == m_moduleMap.end)
+		{
+		    delete *itMsg;
+		}
+		else
+		{
+		    itRecvModule->OnMsg(*itMsg);
+		}
+            }
+	}
+    }
+}
