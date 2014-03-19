@@ -2,8 +2,8 @@
 #define _BHCOND_PP_
 
 #include <pthread.h>
-#include "../BhNonCopy.hpp"
-#include "BhMutex.hpp"
+#include <thread/BhNonCopy.hpp>
+#include <thread/BhMutex.hpp>
 
 class BhCond
     :public BhNonCopy

@@ -1,7 +1,7 @@
 #ifndef _BHMUTEX_HPP_
 #define _BHMUTEX_HPP_
 
-#include "../BhNonCopy.hpp"
+#include <util/BhNonCopy.hpp>
 #include <pthread.h>
 
 class BhMutex

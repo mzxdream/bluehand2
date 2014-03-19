@@ -1,7 +1,7 @@
 #ifndef _IBHTHREAD_HPP_
 #define _IBHTHREAD_HPP_
 
-#include "../BhNonCopy.hpp"
+#include <util/BhNonCopy.hpp>
 #include <pthread.h>
 
 class IBhThread
@@ -13,7 +13,7 @@ public:
 public:
     bool Start()
     {
-        return !::pthread_create(&m_tid,NULL,ThreadMain,this);
+        return !::pthread_create(&m_tid, NULL, ThreadMain, this);
     }
     void Join()
     {
@@ -27,7 +27,7 @@ protected:
     virtual void Run() = 0;
     static void* ThreadMain(void *pParam)
     {
-        IBhThread *pThread = static_cast<IBhThread *>(pParam);
+        IBhThread *pThread = static_cast<IBhThread*>(pParam);
         if (pThread)
         {
             pThread->Run();

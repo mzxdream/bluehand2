@@ -1,15 +1,15 @@
-#ifndef _BHPTRDBLBUF_HPP_
-#define _BHPTRDBLBUF_HPP_
+#ifndef _BHPTRDBLLIST_HPP_
+#define _BHPTRDBLLIST_HPP_
 
 #include <list>
 #include <iostream>
 
 template <typename T>
-class BhPtrDblBuf
+class BhPtrDblList
 {
 public:
-    BhPtrDblBuf(){}
-    ~BhPtrDblBuf()
+    BhPtrDblList(){}
+    ~BhPtrDblList()
     {
         Clear();
     }

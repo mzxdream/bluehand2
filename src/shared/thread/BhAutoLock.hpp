@@ -1,8 +1,8 @@
 #ifndef _BHAUTOLOCK_HPP_
 #define _BHAUTOLOCK_HPP_
 
-#include "BhMutex.hpp"
-#include "../BhNonCopy.hpp"
+#include <thread/BhMutex.hpp>
+#include <util/BhNonCopy.hpp>
 
 class BhAutoLock
     :public BhNonCopy
