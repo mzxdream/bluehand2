@@ -1,36 +1,25 @@
 #ifndef _BHCOND_HPP_
-#define _BHCOND_PP_
+#define _BHCOND_HPP_
 
 #include <pthread.h>
-#include <thread/BhNonCopy.hpp>
-#include <thread/BhMutex.hpp>
+#include <shared/thread/BhMutex.hpp>
 
 class BhCond
-    :public BhNonCopy
 {
 public:
-    BhCond()
-    {
-        ::pthread_cond_init(&m_cond, NULL);
-    }
-    ~BhCond()
-    {
-        ::pthread_cond_destroy(&m_cond);
-    }
-    bool Wait(BhMutex& mutex)
-    {
-        return !pthread_cond_wait(&m_cond, mutex.GetHandle());
-    }
-    bool Notify()
-    {
-        return !pthread_cond_signal(&m_cond);
-    }
-    bool NotifyAll()
-    {
-        return !pthread_cond_broadcast(&m_cond);
-    }
+    BhCond();
+    ~BhCond();
 private:
-    pthread_cond_t m_cond;
+    BhCond(const BhCond&);
+    BhCond& operator=(const BhCond&);
+public:
+    int Init();
+    void Clear();
+    int Wait(const BhMutex& mtx);
+    int Notify();
+    int NotifyAll();
+private:
+    pthread_cond_t* m_pCond;
 };
 
-#endif
+#endif //_BHCOND_HPP_

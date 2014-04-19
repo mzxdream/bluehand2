@@ -1,21 +1,26 @@
 #ifndef _BHLISTENSOCKET_HPP_
 #define _BHLISTENSOCKET_HPP_
 
-#include "BhTcpSocket.hpp"
+#include <shared/net/BhTcpSocket.hpp>
 
 class BhListenSocket
-	:public IBhSocket
+	:public BhSocket
 {
 public:
-	BhListenSocket(int nSock = -1)
-		:IBhSocket(nSock)
-	{
-	}
-	virtual ~BhListenSocket(){}
+	explicit BhListenSocket(unsigned uMaxListen, const std::string& strIP = "", int nPort = 0);
+	virtual ~BhListenSocket();
 public:
-	virtual bool Open(){return true;}
-	virtual void Close(){}
-	BhTcpSocket* Accept(){}
+	virtual int Init();
+	virtual void Clear();
+	bool ReadActive() const;
+	void ReadActive(bool bActive);
+	unsigned MaxListen() const;
+	int Accept(BhTcpSocket& sock);
+private:
+    unsigned m_uMaxListen;
+    std::string m_strIP;
+    int m_nPort;
+    bool m_bReadActive;
 };
 
 #endif

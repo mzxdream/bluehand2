@@ -2,10 +2,8 @@
 #define _BHAUTOLOCK_HPP_
 
 #include <thread/BhMutex.hpp>
-#include <util/BhNonCopy.hpp>
 
 class BhAutoLock
-    :public BhNonCopy
 {
 public:
     explicit BhAutoLock(BhMutex* pMutex)
@@ -23,6 +21,9 @@ public:
             m_pMutex->UnLock();
         }
     }
+private:
+    BhAutoLock(const BhAutoLock&);
+    BhAutoLock& operator=(const BhAutoLock&);
 private:
     BhMutex *m_pMutex;
 };

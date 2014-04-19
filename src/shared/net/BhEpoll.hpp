@@ -7,27 +7,39 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/epoll.h>
+#include <shared/net/BhTcpSocket.hpp>
+#include <shared/net/BhListenSocket.hpp>
+#include <shared/util/BhSignal.hpp>
 
-enum class BhEpollEvent{Read, Write};
-enum class BhEpollFlag{Level, Edge};
+#define BHEPOLL_IN 0x01
+#define BHEPOLL_OUT 0x02
+#define BHEPOLL_ET 0x04
 
 class BhEpoll
 {
 public:
-	BhEpoll();
+	explicit BhEpoll(int nMaxEvents);
 	~BhEpoll();
 public:
-	bool Init(int nMaxEvents);
+	int Init();
 	void Clear();
-	bool AddEvent(BhTcpSocket *pSock, BhEpollEvent event = BhEpollEvent::Read, BhEpollFlag flag = BhEpollFlag::Level);
-    bool DelEvent(BhTcpSocket *pSock, BhEpollEvent event = BhEpollEvent::Read, BhEopllFlag flag = BhEpollFlag::Level);
-    bool AddConnection(BhListenSocket *pSock);
-    bool DelConnection(BhListenSocket *pSock);
-    bool WaitEvents(int nTimeOut = -1);
+	bool AddEvent(BhTcpSocket* pSock, unsigned uEvents);
+    bool DelEvent(BhTcpSocket* pSock, unsigned uEvents);
+    bool AddConnection(BhListenSocket* pSock);
+    bool DelConnection(BhListenSocket* pSock);
+    int WaitEvents(int nTimeOut = -1);
+    BhSignal& ReadSignal();
+    BhSignal& WriteSignal();
+    BhSignal& ErrorSignal();
+    BhSignal& CloseSignal();
 protected:
 	int m_nEpoll;
-	struct epoll_event *m_pEventList;
-	int nMaxEvents;
+	struct epoll_event* m_pEventList;
+	int m_nMaxEvents;
+    BhSignal m_sigRead;
+    BhSignal m_sigWrite;
+    BhSignal m_sigError;
+    BhSignal m_sigClose;
 };
 
 #endif
