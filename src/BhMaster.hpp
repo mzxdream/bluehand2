@@ -2,9 +2,9 @@
 #define _BHMASTER_HPP_
 
 #include <map>
-#include "./shared/thread/IBhThread.hpp"
-#include "./msg/IBhMsg.hpp"
-#include "./module/IBhModule.hpp"
+#include <shared/thread/IBhThread.hpp>
+#include <shared/module/IBhModule.hpp>
+#include <shared/msg/IBhMsg.hpp>
 
 class BhMaster
     :public IBhThread
@@ -12,8 +12,14 @@ class BhMaster
 public:
     BhMaster();
     virtual ~BhMaster();
+private:
+	BhMaster& operator=(const BhMaster&);
+	BhMaster(const BhMaster&);
 public:
-    bool AddModule(unsigned uModule, IBhModule* pModule);
+	int Init();
+	void Clear();
+    int AddModule(unsigned uModule, IBhModule* pModule);
+	int Start();
     void Stop();
 protected:
     virtual void Run();
@@ -22,4 +28,4 @@ protected:
     volatile bool m_bWantRun;
 };
 
-#endif
+#endif //_BHMASTER_HPP_
