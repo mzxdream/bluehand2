@@ -18,7 +18,7 @@
 class BhEpoll
 {
 public:
-	explicit BhEpoll(int nMaxEvents);
+	explicit BhEpoll(unsigned uMaxEvents);
 	~BhEpoll();
 public:
 	int Init();
@@ -35,7 +35,7 @@ public:
 protected:
 	int m_nEpoll;
 	struct epoll_event* m_pEventList;
-	int m_nMaxEvents;
+	unsigned m_uMaxEvents;
     BhSignal m_sigRead;
     BhSignal m_sigWrite;
     BhSignal m_sigError;

@@ -1,29 +1,29 @@
 #include "BhEpoll.hpp"
 
-BhEpoll::BhEpoll(int nMaxEvents)
+BhEpoll::BhEpoll(unsigned uMaxEvents)
     :m_nEpoll(-1)
     ,m_pEventList(NULL)
-    ,m_nMaxEvents(nMaxEvents)
+    ,m_uMaxEvents(uMaxEvents)
 {
 }
 BhEpoll::~BhEpoll()
 {
     Close();
 }
-bool BhEpoll::Init()
+int BhEpoll::Init()
 {
     if (-1 == (m_nEpoll = ::epoll_create1(0)))
     {
-        return false;
+        return -1;
     }
-    m_pEventList = new struct epoll_event[m_nMaxEvents];
+    m_pEventList = new struct epoll_event[m_uMaxEvents];
     if (!m_pEventList)
     {
         ::close(m_nEpoll);
         m_nEpoll = -1;
-        return false;
+        return -2;
     }
-    return true;
+    return 0;
 }
 void BhEpoll::Clear()
 {
@@ -162,29 +162,28 @@ bool BhEpoll::DelConnection(BhListenSocket *pSock)
 }
 int BhEpoll::WaitEvents(int nTimeOut)
 {
-    int nEvents = ::epoll_wait(m_nEpoll, m_pEventList, m_nMaxEvents, nTimeOut);
+    int nEvents = ::epoll_wait(m_nEpoll, m_pEventList, m_uMaxEvents, nTimeOut);
     for (int i = 0; i < nEvents; ++i)
 	{
         struct epoll_event& e = m_pEventList[i];
-        BhSocket* pSock = static_cast<BhSocket*>(e.data.ptr);
         if ((e.events & EPOLLERR) || ((e.events & EPOLLHUP) && !(e.events & EPOLLIN)))
         {
-            m_sigError(pSock);
+            m_sigError(e.data.ptr);
         }
         else if (e.events & EPOLLIN)
         {
             if (e.events & EPOLLRDHUP)
             {
-                m_sigClose(pSock);
+                m_sigClose(e.data.ptr);
             }
             else
             {
-                m_sigRead(pSock);
+                m_sigRead(e.data.ptr);
             }
         }
         else if (e.events & EPOLLOUT)
         {
-            m_sigWrite(pSock);
+            m_sigWrite(e.data.ptr);
         }
     }
     return 0;
